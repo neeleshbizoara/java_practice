@@ -50,16 +50,16 @@ public class ProductController {
 
     @PostMapping()
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
-//        return null;
         ResponseEntity<Product> responseEntity = null;
         responseEntity = new ResponseEntity<>(productService.createProduct(product), HttpStatus.OK);
         return responseEntity;
-//       return productService.createProduct(product);
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        return null;
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+        ResponseEntity<Product> responseEntity = null;
+        responseEntity = new ResponseEntity<>(productService.updateProduct(id, product), HttpStatus.OK);
+        return responseEntity;
     }
 
     @PutMapping("/{id}")
