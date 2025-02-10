@@ -15,6 +15,7 @@ public class FakeStoreProductService implements ProductService{
     private RestTemplate obj;
 
     public FakeStoreProductService(RestTemplate restTemplate){
+
         this.obj = restTemplate;
     }
 
@@ -35,15 +36,16 @@ public class FakeStoreProductService implements ProductService{
         return product;
     }
     @Override
-    public  Product getProductById(Long productId) {
-//       Make a API call to FakeStore and get the product with the given Id.
-        FakeStoreProductDto  fakeStoreProduct = obj.getForObject("https://fakestoreapi.com/products/" + productId,
+    public Product getProductById(Long productId) {
+        // Make a API call to FakeStore and get the product with the given Id.
+        FakeStoreProductDto fakeStoreProduct = obj.getForObject("https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class);
 
         // Convert FakeStoreProductDto object into Product object
 
         assert fakeStoreProduct != null;
         return convertFakeStoreProductDtoTpProduct(fakeStoreProduct);
+//        throw new RuntimeException("Something went wrong.");
     }
 
     @Override
@@ -58,5 +60,11 @@ public class FakeStoreProductService implements ProductService{
             products.add(convertFakeStoreProductDtoTpProduct(fakeStoreProductDto));
         }
         return products;
+    }
+
+    @Override
+    public Product createProduct(Product product) {
+        Product createdProduct = obj.postForObject("https://fakestoreapi.com/products", product, Product.class);
+        return createdProduct;
     }
 }
