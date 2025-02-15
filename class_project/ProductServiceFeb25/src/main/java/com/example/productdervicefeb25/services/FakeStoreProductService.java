@@ -1,6 +1,7 @@
 package com.example.productdervicefeb25.services;
 
 import com.example.productdervicefeb25.dtos.FakeStoreProductDto;
+import com.example.productdervicefeb25.exceptions.ProductNotFoundException;
 import com.example.productdervicefeb25.models.Category;
 import com.example.productdervicefeb25.models.Product;
 import org.springframework.stereotype.Service;
@@ -53,14 +54,15 @@ public class FakeStoreProductService implements ProductService{
         return product;
     }
     @Override
-    public Product getProductById(Long productId) {
+    public Product getProductById(Long productId) throws ProductNotFoundException {
         // Make a API call to FakeStore and get the product with the given Id.
         FakeStoreProductDto fakeStoreProduct = obj.getForObject("https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class);
 
         // Convert FakeStoreProductDto object into Product object
-
-        assert fakeStoreProduct != null;
+        if(fakeStoreProduct != null) {
+            throw new ProductNotFoundException("Product with id: " + productId + " does not exist.");
+        }
         return convertFakeStoreProductDtoToProduct(fakeStoreProduct);
 //        throw new RuntimeException("Something went wrong.");
     }
@@ -85,11 +87,11 @@ public class FakeStoreProductService implements ProductService{
         return createdProduct;
     }
 
-    @Override
-    public Product updateProduct(Long productId, Product product) {
-        FakeStoreProductDto fakeproduct = convertProductToFakeStoreProductDto(product);
-        FakeStoreProductDto updateProduct = obj.patchForObject("https://fakestoreapi.com/products/" + productId, fakeproduct, FakeStoreProductDto.class);
-        return convertFakeStoreProductDtoToProduct(updateProduct);
-//        return updateProduct;
-    }
+//    @Override
+//    public Product updateProduct(Long productId, Product product) {
+//        FakeStoreProductDto fakeproduct = convertProductToFakeStoreProductDto(product);
+//        FakeStoreProductDto updateProduct = obj.patchForObject("https://fakestoreapi.com/products/" + productId, fakeproduct, FakeStoreProductDto.class);
+//        return convertFakeStoreProductDtoToProduct(updateProduct);
+////        return updateProduct;
+//    }
 }
